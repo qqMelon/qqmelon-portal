@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
-import HelloWorld from './../components/HelloWorld.vue';
-import router from './../router';
+import { useUserStore } from '../store/user';
+import HelloWorld from '../components/HelloWorld.vue';
+import router from '../router';
 
 const email = ref('');
 const password = ref('');
+
+const userStore = useUserStore()
 
 const signin = function () {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email.value, password.value)
         .then((data) => {
             console.log(data);
+            userStore.addUserData(data)
             router.push({ name: 'home' });
         })
         .catch(error => {
